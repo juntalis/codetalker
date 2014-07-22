@@ -508,19 +508,13 @@ struct Token* c_get_tokens(struct Grammar* grammar, char* text, int indent, stru
     struct Token* start = NULL;
     struct Token* current = NULL;
     struct Token* tmp = NULL;
-
-    struct TokenState state;
     struct PToken ptoken;
-
     int ID_t = grammar->tokens.num;
     int DD_t = grammar->tokens.num+1;
-
-
-
     int res = 0;
-
-
     int dirty;
+
+    struct TokenState state;    
     state.at = 0;
     state.ln = strlen(text);
     // state.text = text;
