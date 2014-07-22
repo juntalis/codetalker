@@ -7,6 +7,12 @@
 #include "string.h"
 #include "_speed_tokens.h"
 
+#if defined(_WIN32) || defined(_WIN64) || defined(_MSC_VERS)
+#ifndef strncasecmp
+#define strncasecmp _strnicmp
+#endif
+#endif
+
 /**
  * Backend code for tokenizing strings
  */
@@ -20,11 +26,12 @@
  * Returns the number of characters consumed (0 for invalid)
  */
 int t_tstring(int at, char* text, int ln) {
+    char which;
     int i = at;
     if (ln < at + 6 || (text[i] != '\'' && text[i] != '"')) {
         return 0;
     }
-    char which = text[i];
+    which = text[i];
     if (text[i+1] != which || text[i+2] != which) {
         return 0;
     }
@@ -124,7 +131,7 @@ int t_id(int at, char* text, int ln, char* idchars) {
  * Returns the number of characters consumed (0 for invalid)
  */
 int t_number(int at, char* text, int ln) {
-    int i = at;
+    int pre, i = at;
     if (text[i] == '-') i++;
     if (i >= ln) return 0;
     if (text[i] == '.') {
@@ -148,7 +155,7 @@ int t_number(int at, char* text, int ln) {
     } else {
         return 0;
     }
-    int pre = i;
+    pre = i;
     if (i < ln-2 && (text[i] == 'e' || text[i] == 'E')) {
         i++;
         if (text[i] == '+' || text[i] == '-') {
